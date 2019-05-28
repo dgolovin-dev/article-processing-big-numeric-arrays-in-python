@@ -1,0 +1,7 @@
+loaded
+[648.75]
+Traceback (most recent call last):
+...
+KeyboardInterrupt
+Command exited with non-zero status 1
+9:00.91 1242328Kb
