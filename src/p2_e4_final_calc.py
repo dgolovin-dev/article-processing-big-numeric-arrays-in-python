@@ -5,7 +5,9 @@ import numpy as np
 
 # нужно провести поправку на сплиты перед расчетом ema
 split_cumprod = data.loc[:, 'split', :].cumprod('date')
-data.loc[:, ['close', 'open', 'high', 'low', 'divs'], :] = data.loc[:, ['close', 'open', 'high', 'low', 'divs'], :] * split_cumprod
+
+for i in ['close', 'open', 'high', 'low', 'divs']:
+    data.loc[:, i, :] = data.loc[:, i, :] * split_cumprod
 data.loc[:, 'vol', :] = data.loc[:, 'vol', :] / split_cumprod
 
 #собственно расчет портфеля

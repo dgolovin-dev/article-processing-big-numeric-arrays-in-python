@@ -222,7 +222,9 @@ import numpy as np
 
 # нужно провести поправку на сплиты перед расчетом ema
 split_cumprod = data.loc[:, 'split', :].cumprod('date')
-data.loc[:, ['close', 'open', 'high', 'low', 'divs'], :] = data.loc[:, ['close', 'open', 'high', 'low', 'divs'], :] * split_cumprod
+
+for i in ['close', 'open', 'high', 'low', 'divs']:
+    data.loc[:, i, :] = data.loc[:, i, :] * split_cumprod
 data.loc[:, 'vol', :] = data.loc[:, 'vol', :] / split_cumprod
 
 #собственно расчет портфеля
@@ -254,9 +256,9 @@ echo "Part #2 example #4: final calc"
 [Example #4. report](../report/p2_e4.txt) 
 ```
 loaded
-[649.1328125]
+[648.18359375]
 done
-0:02.18 1618792Kb
+0:02.74 1241740Kb
 ```
 
 Итого: программа выполняется менее 3 секунд потребляя в пике не более 1.2GB памяти. Здесь и Numba не нужен. Все, задача решена.
