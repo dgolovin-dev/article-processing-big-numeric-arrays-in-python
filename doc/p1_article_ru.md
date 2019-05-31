@@ -67,7 +67,7 @@ for root, dirs, files in os.walk(DATA_DIR):
 
 print("loaded")
 
-# меряем памяти после загрузки массива данных
+# меряем память после загрузки массива данных
 from memory_profiler import memory_usage
 print(memory_usage())
 ``` 
