@@ -19,7 +19,8 @@ for root, dirs, files in os.walk(DATA_DIR):
                     first = False
                     headers = row
                     continue
-                row = [float(row[i]) if i > 0 else datetime.strptime(row[i], "%Y-%m-%d").date() for i in range(len(row))]
+                row = [float(row[i]) if i > 0 else datetime.strptime(row[i], "%Y-%m-%d").date()
+                       for i in range(len(row))]
                 series.append(row)
             data[asset] = series
 
