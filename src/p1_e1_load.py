@@ -2,7 +2,9 @@ import os
 import csv
 from datetime import datetime
 
-DATA_DIR='../data' # this directory contains only 1 sample, make multiple copies of this sample for reasonable results
+DATA_DIR='../data'
+# this directory contains only 1 sample,
+# make multiple copies of this sample for reasonable results
 
 data = dict()
 for root, dirs, files in os.walk(DATA_DIR):
