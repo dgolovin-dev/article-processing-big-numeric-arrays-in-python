@@ -176,7 +176,8 @@ def numba_ema(data, n):
 def calc_ema(data, n):
     nparr = data.values
     nparr = numba_ema(nparr, n)
-    return xr.DataArray(nparr, dims=['asset', 'date'], coords={'date': data.coords['date'], 'asset': data.coords['asset']})
+    return xr.DataArray(nparr, dims=['asset', 'date'],
+                        coords={'date': data.coords['date'], 'asset': data.coords['asset']})
 
 if __name__ == '__main__':
     ema = calc_ema(data.loc[:, 'close', :], 20)
