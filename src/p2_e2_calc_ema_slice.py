@@ -1,20 +1,13 @@
 from p1_e4_load_xr_netcdf import data
 import xarray as xr
 import numpy as np
+import time
 
 def calc_ema(data, n):
     k = 2.0 / (1 + n)
     _k = 1 - k
-    ema = xr.DataArray(
-        np.zeros([len(data.coords['asset']), len(data.coords['date'])], np.float64),
-        dims=['asset', 'date'],
-        coords={'date': data.coords['date'], 'asset': data.coords['asset']}
-    )
-    prev_ema = xr.DataArray(
-        np.full([len(data.coords['asset'])], np.nan, dtype=np.float64),
-        dims=['asset'],
-        coords={'asset': data.coords['asset']}
-    )
+    ema = xr.zeros_like(data)
+    prev_ema = xr.zeros_like(ema.isel(date=0))
     for t in data.coords['date']:
         cur_data = data.loc[:, t]
         cur_finite = np.isfinite(cur_data)
@@ -29,5 +22,7 @@ def calc_ema(data, n):
     return ema
 
 if __name__ == '__main__':
+    t0 = time.time()
     ema = calc_ema(data.loc[:, 'close', :], 20)
-    print('done')
+    t1 = time.time()
+    print('done', t1 - t0)

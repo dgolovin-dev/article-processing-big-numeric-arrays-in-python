@@ -1,4 +1,9 @@
 .idea/
 /data
 /data.nc
+/data.pickle
 /portfolio.nc
+/data2/
+/data2gz/
+/src/cema.so
+/src/cema.c

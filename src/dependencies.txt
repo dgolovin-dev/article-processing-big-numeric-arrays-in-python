@@ -1,0 +1,6 @@
+numpy
+pandas
+xarray
+memory_profiler
+scipy
+cython
