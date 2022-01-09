@@ -45,7 +45,7 @@ At first we need to load the data. Let's do it using pure Python.
 {% include_relative src/p1_e1_load.py  %}
 ```
 
-# [Home](/)
+# [[Home]](/)
 
 
 <script src='/assets/comments.js'></script>
