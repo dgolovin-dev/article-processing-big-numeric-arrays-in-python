@@ -8,4 +8,4 @@
 {% include_relative src/generate_test_data.py  %}
 ```
 
-{% include comments.html %}
+<script src='/assets/comments.js'></script>
