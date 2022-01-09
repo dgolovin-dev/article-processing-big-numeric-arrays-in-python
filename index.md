@@ -25,11 +25,11 @@ date,open,high,low,close,vol,divs,split
 - *execution time should be less than 10 seconds*
 - *your program should consume less than 1.5GB RAM*
 
-This task looks simple, but the volume of data and the restrictions make this task is not so easy.
+This task looks simple, but the volume of the data and the restrictions make this task not so easy.
 
 ## Generate the data 
 
-Just run this script and it will generate 2000 series. Notice, that size of these series is about
+Just run this script and it will generate 2000 series. Notice, that size of these series is about 0.5GB.
 ```bash
 $ python generate_test_data.py
 ```
