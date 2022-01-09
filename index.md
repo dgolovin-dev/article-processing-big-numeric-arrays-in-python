@@ -4,4 +4,8 @@
 
 2. [Как быстро и удобно ворочать большими числовыми массивами в python (часть 2)](./doc/p2_article_ru.md)
 
+```python
+{% include_relative src/generate_test_data.py  %}
+```
+
 {% include comments.html %}
