@@ -1,4 +1,5 @@
-# article
+# Processing big numeric arrays in python
+
 
 1. [Как быстро и удобно ворочать большими числовыми массивами в python (часть 1)](./doc/p1_article_ru.md)
 
