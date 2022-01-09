@@ -29,7 +29,7 @@ This task looks simple, but the volume of the data and the restrictions make thi
 
 ## Generate the data 
 
-Just run this script and it will generate 2000 series. Notice, that size of these series is about 0.5GB.
+Just run this script and it will generate 2000 series. Notice, that size of these series is about **0.5GB**. (You can generate more, but this amount is enough to demonstrate all the ideas.)
 ```bash
 $ python generate_test_data.py
 ```
