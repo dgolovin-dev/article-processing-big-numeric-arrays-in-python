@@ -37,9 +37,11 @@ $ python generate_test_data.py
 
 ## Load data to RAM
 
-At first we need to load the data. Let's do it using pure Python.
+First, we need to load the data. We'll try different approaches, and I'll show you how to reorganize your data and significantly reduce the time and RAM.
 
-### Pure Python
+### Load with pure Python
+
+ First, let's do it with pure Python.
 
 ```python
 {% include_relative src/p1_e1_load.py  %}
