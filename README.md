@@ -1,5 +1,1 @@
-# article
-
-1. [Как быстро и удобно ворочать большими числовыми массивами в python (часть 1)](./doc/p1_article_ru.md)
-
-2. [Как быстро и удобно ворочать большими числовыми массивами в python (часть 2)](./doc/p2_article_ru.md)
+This article is published [here](https://dgolovin-dev.github.io/article-processing-big-numeric-arrays-in-python/).
