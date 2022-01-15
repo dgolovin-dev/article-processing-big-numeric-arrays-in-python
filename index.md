@@ -91,7 +91,7 @@ This script generates 2000 series.
 ```bash
 $ python e01_generate_test_data.py
 ```
-[source code](src/generate_test_data.py)
+[source code](src/e01_generate_test_data.py)
 
 Notice, that size of these series is about **0.5GB**. 
 (You can generate more, but this amount is enough to demonstrate all the ideas.)
