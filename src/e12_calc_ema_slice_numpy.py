@@ -1,7 +1,9 @@
-from p1_e4_load_xr_netcdf import data
 import xarray as xr
 import numpy as np
 import time
+
+data = xr.open_dataarray('../data.nc', decode_times=True).compute()
+
 
 def calc_ema_np(data, n):
     k = 2.0 / (1 + n)
@@ -19,10 +21,11 @@ def calc_ema_np(data, n):
         prev_ema = ema[:, t]
     return ema
 
-if __name__ == '__main__':
-    t0 = time.time()
-    ema = xr.zeros_like(data.loc[:,'close',:])
-    ema.values = calc_ema_np(data.loc[:, 'close', :].values, 20)
-    t1 = time.time()
 
-    print('done', t1 - t0, ema)
+t0 = time.time()
+ema = xr.zeros_like(data)
+for f in data.field.values.tolist():
+    ema.loc[:,f,:].values = calc_ema_np(data.loc[:,f,:].values, 20)
+t1 = time.time()
+
+print('time:', t1 - t0)

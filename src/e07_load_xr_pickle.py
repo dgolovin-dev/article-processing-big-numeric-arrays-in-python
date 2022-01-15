@@ -3,9 +3,9 @@ import pickle
 
 data = pickle.load(open("../data.pickle", 'rb'))
 
-print("loaded")
-
-print(data)
 # measure memory after loading
+# measure memory after loading
+import gc
 from memory_profiler import memory_usage
-print(memory_usage())
+gc.collect()
+print("current memory:", memory_usage()[0]*1024, "Kb")

@@ -3,8 +3,6 @@ import csv
 from datetime import datetime
 
 DATA_DIR='../data'
-# this directory contains only 1 sample,
-# make multiple copies of this sample for reasonable results
 
 data = dict()
 for root, dirs, files in os.walk(DATA_DIR):
@@ -26,8 +24,9 @@ for root, dirs, files in os.walk(DATA_DIR):
                 series.append(row)
             data[asset] = series
 
-print("loaded")
 
-# меряем память после загрузки массива данных
+# measure memory after loading
+import gc
 from memory_profiler import memory_usage
-print(memory_usage())
+gc.collect()
+print("current memory:", memory_usage()[0]*1024, "Kb")
