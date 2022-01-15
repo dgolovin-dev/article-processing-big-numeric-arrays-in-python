@@ -269,7 +269,7 @@ It is also reduces the execution time.
 
 Code:
 ```python
-{% include_relative src/e11_ema_calc_slice.py  %}
+{% include_relative src/e11_calc_ema_slice.py  %}
 ```
 
 Report:
