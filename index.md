@@ -51,7 +51,7 @@ date,open,high,low,close,vol,divs,split
 
 This task looks simple, but the volume of the data and the restrictions make this task not so easy.
 
-## Measures
+## Benchmarking
 *Shortly about how I measure consumed RAM and execution time.*
 
 In order to evaluate the approaches, I will use this command to measure the peak memory and the execution time:
