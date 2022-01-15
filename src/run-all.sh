@@ -44,12 +44,15 @@ echo "..."
 echo "Group data by column..."
 python e03_group_by_column.py
 
-
 echo "..."
 echo "Merge data into 1 file..."
 python e05_convert_to_nc_and_pickle.py
 
 fi
+
+echo "..."
+echo "Clear FS cache"
+sudo bash -c "sync; echo 3 > /proc/sys/vm/drop_caches"
 
 echo "..."
 echo "Load data (pure Python)"
@@ -66,11 +69,11 @@ python e02_load_pandas.py 2>&1 \
 | tee ../report/e02_load_pandas.txt
 
 echo "..."
-echo "Load data (Pandas 10)"
+echo "Load data (Pandas 7)"
 /usr/bin/time -f "time: %E peak memory: %MKb" \
 timeout "$TIMEOUT" \
-python e04_load_pandas_10.py 2>&1 \
-| tee ../report/e04_load_pandas_10.txt
+python e04_load_pandas_7.py 2>&1 \
+| tee ../report/e04_load_pandas_7.txt
 
 echo "..."
 echo "Load data (xarray netcdf)"

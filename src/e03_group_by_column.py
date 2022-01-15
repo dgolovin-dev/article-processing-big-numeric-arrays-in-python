@@ -26,4 +26,4 @@ os.makedirs(DATA2_DIR, exist_ok=True)
 for f in data.field.values.tolist():
     print("write", f)
     ds = data.sel(field=f).transpose('date','asset').to_pandas()
-    ds.to_csv(DATA2_DIR + "/" + f + '.csv.gz',  float_format='%.2f')
+    ds.to_csv(DATA2_DIR + "/" + f + '.csv',  float_format='%.2f')
