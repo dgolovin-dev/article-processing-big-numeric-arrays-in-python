@@ -412,7 +412,7 @@ to work directly with underlying C-arrays in RAM
 - cython is not python and it is more tricky than numba. 
 But numba requires additional time(often small) for JIT compilation.
 
-# [[Home]](/)
+# [[Author]](/)
 
 
 <script src='/assets/comments.js'></script>
