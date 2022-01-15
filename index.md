@@ -14,6 +14,29 @@ In this article I will talk about *numpy*, *pandas*, *xarray*, *cython*, *numba*
 **Definition**: *Calculate [Exponential Moving Averages](https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average)
 for all columns of 2000 stocks 20-years daily data series.*
 
+## Summary
+I will give you the benchmark results in advance.
+See them and then decide if you want to read this whole article or not.
+
+| **Approach**            | **time**      | **peak RAM** | **end RAM** |
+|-------------------------|---------------|--------------|-------------|
+| **Load data**           |               |              |             |
+| pure python (csv)       | **1m37s**     | 4GB          | **4GB**     |
+| pandas (csv)            | **12s**       | 1.4GB        | **1.4GB**   |
+| pandas (csv, big files) | **8s**        | 0.72GB       | **0.72GB**  |
+| xarray (netcdf, 1 file) | **1.6s**      | 1.2GB        | **0.65GB**  |
+| xarray (pickle, 1 file) | **1.3s**      | 1.2GB        | **0.65GB**  |
+| **Calculate EMA**       |               |              |             |
+| naive                   | **>5m**       | 1.2GB        | 1.2GB       |
+| naive numpy             | **3m**        | 1.2GB        | 1.2GB       |
+| naive improved          | **2m**        | 1.2GB        | 1.2GB       |
+| slices                  | **4m**        | 1.2GB        | 1.2GB       |
+| numpy slices            | **2.4s**      | 1.2GB        | 1.2GB       |
+| cython                  | **0.5s**      | 1.2GB        | 1.2GB       |
+| numba                   | **0.5(+0.3)** | 1.2GB        | 1.2GB       |
+
+## Task - additional info
+
 **Data sample**:
 ```txt
 date,open,high,low,close,vol,divs,split
@@ -78,7 +101,7 @@ Notice, that size of these series is about **0.5GB**.
 First, we need to load the data.
 We'll try different approaches, and I'll show you how to reorganize your data and significantly reduce the time and RAM.
 
-### Load with pure Python
+### Load with pure Python (csv)
 
 First, let's do it with pure Python.
 
@@ -95,7 +118,7 @@ Report:
 The execution time is **1m38s** and the consumed memory is about **4GB**.
 This is unacceptable. Let's try the other approaches.
 
-### Load with Pandas
+### Load with Pandas (csv)
 
 Next, we will use pandas to load the data.
 
@@ -121,7 +144,7 @@ But the data is still about 3 times larger in RAM than on HDD
 because pandas creates separate indexes for each file.
 It makes sense to reorganize the data to reduce the number of files.
 
-### Load with pandas (7 columns)
+### Load with pandas (csv, big files)
 The data in these files contain the same columns, so we can load all these data and 
 save the every column data for all assets in the separate file.
 
@@ -148,7 +171,7 @@ The execution time is **8s** and the consumed memory is about **0.72GB**.
 *You can considerably improve the performance if you switch from CSV(text format) 
 to any another binary format(netcdf, pickle, etc).*
 
-### Load with xarray
+### Load with xarray (netcdf, pickle)
 Unfortunately, pandas can work only with 2 dimensions. 
 But `xarray`(similar library) can work with more than 2 dimensions, so we can join all data to one file.
 Also it supports the netcdf binary file format (out of box with scipy).
@@ -282,7 +305,7 @@ But slice operations are very fast in numpy.
 So, You should bypass xarray and work with numpy directly 
 if you want to reach good performance.
 
-### EMA with slices and numpy
+### EMA with numpy slices 
 In this approach we are working with numpy slices directly.
 
 Code:
