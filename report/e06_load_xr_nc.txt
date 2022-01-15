@@ -1,0 +1,2 @@
+current memory: 647624.0 Kb
+time: 0:01.67 peak memory: 1195560Kb

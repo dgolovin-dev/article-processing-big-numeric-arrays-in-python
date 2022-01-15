@@ -1,8 +1,3 @@
-# cython -3 cema.pyx
-# gcc -shared -pthread  -fPIC -fwrapv -Wall -O2 \
-# -I /opt/anaconda/envs/.../lib/python3.7/site-packages/numpy/core/include/ \
-# -I  /opt/anaconda/envs/.../include/python3.7m/ -o cema.so cema.c
-
 import xarray as xr
 import time
 
