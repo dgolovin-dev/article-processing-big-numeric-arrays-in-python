@@ -120,8 +120,7 @@ But the data is still about 3 times larger in RAM than on HDD
 because pandas creates separate indexes for each file.
 It makes sense to reorganize the data to reduce the number of files.
 
-
-## Load with pandas (7 columns)
+### Load with pandas (7 columns)
 The data in these files contain the same columns, so we can load all these data and 
 save the every column data for all assets in the separate file.
 
@@ -145,7 +144,67 @@ Report:
 
 The execution time is **8s** and the consumed memory is about **0.72GB**.
 
-It looks acceptable, but we can do it better.
+*You can considerably improve the performance if you switch from CSV(text format) 
+to any another binary format(netcdf, pickle, etc).*
+
+### Load with xarray
+Unfortunately, pandas can work only with 2 dimensions. 
+But `xarray`(similar library) can work with more than 2 dimensions, so we can join all data to one file.
+Also it supports the netcdf binary file format (out of box with scipy).
+We also test the pickle file format.
+
+This script joins all the data to one file and saves it to netcdf and pickle.
+```bash
+$ python e05_convert_to_nc_and_pickle.py
+```
+[source code](src/e05_convert_to_nc_and_pickle.py)
+
+Then we will load the data with netcdf and pickle:
+
+**netcdf**
+Code:
+```python
+{% include_relative src/e06_load_xr_nc.py  %}
+```
+
+Report:
+```txt
+{% include_relative report/e06_load_xr_nc.txt  %}
+```
+
+Result: **1.7s**, RAM **0.65GB**, peak ram **1.2GB**
+
+**pickle**
+Code:
+```python
+{% include_relative src/e07_load_xr_pickle.py  %}
+```
+
+Report:
+```txt
+{% include_relative report/e07_load_xr_pickle.txt  %}
+```
+Result: **1.3s**, RAM **0.65GB**, peak ram **1.2GB**
+
+ 
+As you see the execution time is less than 2s, the difference is about 0.4s. 
+Also, it consumes more peak memory than pandas in the previous case. 
+It is ok if we take into consideration the further calculations.
+
+If the results are almost equal, I advise you to use netcdf instead of pickle.
+Pickle is connected very closely to the versions of libraries, 
+so when you update your libraries the data can become unreadable from your code. 
+This is a real headache, try to avoid that.
+
+*Honestly, the performance of pandas may be the same if you use binary formats, 
+but it a bit easier to start with xarray+netcdf at this time.*
+
+## Load data - Conclusions
+- use the right librarries (numpy,pandas,xarrray) for numeric data
+- reduce number of files, join small files to big ones
+- use binary data formats
+
+
 
 # [[Home]](/)
 
