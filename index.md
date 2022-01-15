@@ -118,7 +118,7 @@ Report:
 The execution time is **1m38s** and the consumed memory is about **4GB**.
 This is unacceptable. Let's try the other approaches.
 
-### Load with Pandas (csv)
+**Load with Pandas (csv)**
 
 Next, we will use pandas to load the data.
 
@@ -231,7 +231,7 @@ but it a bit easier to start with xarray+netcdf at this time.*
 - reduce number of files, join small files to big ones
 - use binary data formats
 
-## Calculate ema
+## Calculate EMA
 
 **EMA naive**
 
@@ -404,7 +404,7 @@ But code looks more clear, you can remove `@jit`
 and it will work with pure python as well. 
 It simplifies the development a lot, so I prefer to use numba instead of cython.
 
-## EMA - conclusions
+## Calculate EMA - conclusions
 - numpy with slices are considerably fast for most cases
 - work directly with numpy and bypass xarray and pandas
 - you can compile your code with cython or numba 
