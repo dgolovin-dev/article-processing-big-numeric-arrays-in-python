@@ -33,7 +33,7 @@ See them and then decide if you want to read this whole article or not.
 | slices                  | **4m**        | 1.2GB        | 1.2GB       |
 | numpy slices            | **2.4s**      | 1.2GB        | 1.2GB       |
 | cython                  | **0.5s**      | 1.2GB        | 1.2GB       |
-| numba                   | **0.5(+0.3)** | 1.2GB        | 1.2GB       |
+| numba                   | **0.5s(+0.3s)** | 1.2GB        | 1.2GB       |
 
 ## Task - additional info
 
@@ -101,7 +101,7 @@ Notice, that size of these series is about **0.5GB**.
 First, we need to load the data.
 We'll try different approaches, and I'll show you how to reorganize your data and significantly reduce the time and RAM.
 
-### Load with pure Python (csv)
+**Load with pure Python (csv)**
 
 First, let's do it with pure Python.
 
@@ -144,7 +144,8 @@ But the data is still about 3 times larger in RAM than on HDD
 because pandas creates separate indexes for each file.
 It makes sense to reorganize the data to reduce the number of files.
 
-### Load with pandas (csv, big files)
+**Load with pandas (csv, big files)**
+
 The data in these files contain the same columns, so we can load all these data and 
 save the every column data for all assets in the separate file.
 
@@ -171,7 +172,8 @@ The execution time is **8s** and the consumed memory is about **0.72GB**.
 *You can considerably improve the performance if you switch from CSV(text format) 
 to any another binary format(netcdf, pickle, etc).*
 
-### Load with xarray (netcdf, pickle)
+**Load with xarray (netcdf, pickle)**
+
 Unfortunately, pandas can work only with 2 dimensions. 
 But `xarray`(similar library) can work with more than 2 dimensions, so we can join all data to one file.
 Also it supports the netcdf binary file format (out of box with scipy).
@@ -223,14 +225,16 @@ This is a real headache, try to avoid that.
 *Honestly, the performance of pandas may be the same if you use binary formats, 
 but it a bit easier to start with xarray+netcdf at this time.*
 
-### Load data - Conclusions
+## Load data - Conclusions
+
 - use the right librarries (numpy,pandas,xarrray) for numeric data
 - reduce number of files, join small files to big ones
 - use binary data formats
 
 ## Calculate ema
 
-### EMA naive
+**EMA naive**
+
 At first let's try the naive approach.
 
 Code:
@@ -245,7 +249,7 @@ Report:
 
 The execution timed out (took more than 5min).
 
-### EMA naive numpy
+**EMA naive numpy**
 
 When you read the documentation about xarray, you find that xarray is based on `numpy`.
 You can think that it is a good idea to work with the data directly in numpy.
@@ -264,7 +268,8 @@ Report:
 ```
 The time is about **3min**. Better, but still slow.
 
-### EMA naive improved
+**EMA naive improved**
+
 The main problem is that we read and write the data element by element.
 xarray(numpy and pandas too) uses system calls to external libraries
 in order to access to the internal C-array(python can't work directly).
@@ -286,7 +291,7 @@ Report:
 
 The time is about **2min**. Slow.
 
-### EMA with slices
+**EMA with slices**
 Another approach is work with the slices of elements and boolean masks.
 It is also reduces the execution time.
 
@@ -305,7 +310,8 @@ But slice operations are very fast in numpy.
 So, You should bypass xarray and work with numpy directly 
 if you want to reach good performance.
 
-### EMA with numpy slices 
+**EMA with numpy slices**
+ 
 In this approach we are working with numpy slices directly.
 
 Code:
@@ -324,7 +330,8 @@ Further, I will show some ways how to do it even faster.
 We compile the code to work directly with C-arrays.
 It is more complicated, but sometimes it is necessary.
 
-### EMA with cython
+**EMA with cython**
+
 Let's try to use cython to make our code faster.
 
 Cython - is a python-like language which may be converted to C,
@@ -373,7 +380,7 @@ The result is **0.5s**. This is 4 times faster than numpy with slices.
 Unfortunately, this code looks very tricky, and it is easy to make a mistake.
 There is a simpler further.
 
-### EMA with numba
+**EMA with numba**
 
 Numba allows you to compile you python code with JIT (runtime). 
 But it adds some limitations on data types(numpy array and primitive types)
