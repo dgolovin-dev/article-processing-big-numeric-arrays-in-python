@@ -11,7 +11,8 @@ In this article I will talk about *numpy*, *pandas*, *xarray*, *cython*, *numba*
 
 ## Task
 
-**Definition**: *Calculate [Exponential Moving Averages](https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average) for all columns of 2000 stocks daily data series.*
+**Definition**: *Calculate [Exponential Moving Averages](https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average)
+for all columns of 2000 stocks 20-years daily data series.*
 
 **Data sample**:
 ```txt
@@ -199,12 +200,187 @@ This is a real headache, try to avoid that.
 *Honestly, the performance of pandas may be the same if you use binary formats, 
 but it a bit easier to start with xarray+netcdf at this time.*
 
-## Load data - Conclusions
+### Load data - Conclusions
 - use the right librarries (numpy,pandas,xarrray) for numeric data
 - reduce number of files, join small files to big ones
 - use binary data formats
 
+## Calculate ema
 
+### EMA naive
+At first let's try the naive approach.
+
+Code:
+```python
+{% include_relative src/e08_calc_ema_naive.py  %}
+```
+
+Report:
+```txt
+{% include_relative report/e08_calc_ema_naive.txt  %}
+```
+
+The execution timed out (took more than 5min).
+
+### EMA naive numpy
+
+When you read the documentation about xarray, you find that xarray is based on `numpy`.
+You can think that it is a good idea to work with the data directly in numpy.
+
+Let's try this.
+
+
+Code:
+```python
+{% include_relative src/e09_calc_ema_numpy.py  %}
+```
+
+Report:
+```txt
+{% include_relative report/e09_calc_ema_numpy.txt  %}
+```
+The time is about **3min**. Better, but still slow.
+
+### EMA naive improved
+The main problem is that we read and write the data element by element.
+xarray(numpy and pandas too) uses system calls to external libraries
+in order to access to the internal C-array(python can't work directly).
+These calls are slow. We should use batching to reduce the number of calls.
+
+The simplest approach is to extract the whole series from the C-array to python list,
+calculate EMA and write the series back. Let's check.
+
+
+Code:
+```python
+{% include_relative src/e10_calc_ema_naive_improved.py  %}
+```
+
+Report:
+```txt
+{% include_relative report/e10_calc_ema_naive_improved.txt  %}
+```
+
+The time is about **2min**. Slow.
+
+### EMA with slices
+Another approach is work with the slices of elements and boolean masks.
+It is also reduces the execution time.
+
+Code:
+```python
+{% include_relative src/e11_ema_calc_slice.py  %}
+```
+
+Report:
+```txt
+{% include_relative report/e11_calc_ema_slice.txt  %}
+```
+
+The execution time is about **4min**. Bad. You can think that this is a wrong way,
+But slice operations are very fast in numpy. 
+So, You should bypass xarray and work with numpy directly 
+if you want to reach good performance.
+
+### EMA with slices and numpy
+In this approach we are working with numpy slices directly.
+
+Code:
+```python
+{% include_relative src/e12_calc_ema_slice_numpy.py  %}
+```
+
+Report:
+```txt
+{% include_relative report/e12_calc_ema_slice_numpy.txt  %}
+```
+
+The result is **3s**. This is great! We can say, that we solved the task.
+
+Further, I will show some ways how to do it even faster.
+We compile the code to work directly with C-arrays.
+It is more complicated, but sometimes it is necessary.
+
+### EMA with cython
+Let's try to use cython to make our code faster.
+
+Cython - is a python-like language which may be converted to C,
+compiled and linked to python.
+
+This ema function implemented in cython:
+
+Cython code:
+```cython
+{% include_relative src/cema.pyx  %}
+```
+
+As you, it is python-like, but it is not python.
+There are a lot of code which specifies types and conversions. 
+If you make even a minor mistake, your code may start to work 10 times slower 
+or stop working at all.
+
+For example the line 17. This line may look excess, 
+but this is a some magic with types. 
+We force it to use internal memory structure. 
+Without this line the code works 14 times slower.
+
+Also you have to convert and compile the code:
+```bash
+# convert to C
+cython -3 cema.pyx
+# compile
+gcc -shared -pthread -fPIC -fwrapv -Wall -O2 \
+-I "$CONDA_PREFIX/lib/python3.6/site-packages/numpy/core/include/" \
+-I "$CONDA_PREFIX/include/python3.7m/" \
+-o cema.so cema.c
+```
+
+Python code:
+```python
+{% include_relative src/e13_calc_ema_cython.py  %}
+```
+
+Report:
+```txt
+{% include_relative report/e13_calc_ema_cython.txt  %}
+```
+
+The result is **0.5s**. This is 4 times faster than numpy with slices.
+
+Unfortunately, this code looks very tricky, and it is easy to make a mistake.
+There is a simpler further.
+
+### EMA with numba
+
+Numba allows you to compile you python code with JIT (runtime). 
+But it adds some limitations on data types(numpy array and primitive types)
+and operations which you can use, otherwise it won't compile.
+
+Let's rewrite EMA function for numba.
+
+Python code:
+```python
+{% include_relative src/e14_calc_ema_numba.py  %}
+```
+
+Report:
+```txt
+{% include_relative report/e14_calc_ema_numba.txt  %}
+```
+
+The performance is almost the same to cython, 
+but JIT-compilationtakes **additional 0.27s**. 
+But code looks more clear, you can remove `@jit`
+and it will work with pure python as well. 
+It simplifies the development a lot, so I prefer to use numba instead of cython.
+
+## EMA - conclusions
+- numpy with slices are considerably fast for most cases
+- work directly with numpy and bypass xarray and pandas
+- you can compile your code with cython or numba 
+to work directly with underlying C-arrays in RAM
+- cython is not python and it is more tricky than numba. 
+But numba requires additional time(often small) for JIT compilation.
 
 # [[Home]](/)
 

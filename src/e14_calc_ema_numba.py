@@ -5,7 +5,10 @@ import time
 
 data = xr.open_dataarray('../data.nc', decode_times=True).compute()
 
-@jit
+@jit(
+    nopython=True,
+    #parallel=True,
+)
 def numba_ema(data, n):
     k = 2.0 / (1 + n)
     _k = 1 - k
