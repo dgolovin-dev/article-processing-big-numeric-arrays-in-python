@@ -405,12 +405,12 @@ and it will work with pure python as well.
 It simplifies the development a lot, so I prefer to use numba instead of cython.
 
 ## Calculate EMA - conclusions
-- numpy with slices are considerably fast for most cases
+- numpy with slices is fast enough for most cases
 - work directly with numpy and bypass xarray and pandas
 - you can compile your code with cython or numba 
 to work directly with underlying C-arrays in RAM
 - cython is not python and it is more tricky than numba. 
-But numba requires additional time(often small) for JIT compilation.
+Numba requires additional time(often small) for JIT compilation.
 
 # [[Author]](/)
 
