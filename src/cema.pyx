@@ -14,7 +14,7 @@ def c_ema(np.ndarray[DTYPE_t, ndim = 2] data, DTYPE_t n):
     cdef int xmax = data.shape[0]
     cdef int ymax = data.shape[1]
     cdef np.ndarray res = np.zeros([xmax, ymax], dtype=DTYPE)
-    cdef double[:,:] resd = res
+    cdef double[:,:] resd = res # line 17
     cdef DTYPE_t prev_ema = NAN
     cdef DTYPE_t cur_ema = NAN
     for x in range(0, xmax, 1):
